@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="uk" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Все про Футбол: Правила, Історія та Тести</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pitch: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            800: '#166534',
+                            900: '#14532d',
+                            950: '#052e16',
+                        },
+                        gold: {
+                            400: '#facc15',
+                            500: '#eab308',
+                            600: '#ca8a04',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles for Glassmorphism & custom elements */
+        .glass-header {
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+        }
+
+        .stadium-bg {
+            background-image: linear-gradient(to bottom, rgba(5, 46, 22, 0.92), rgba(15, 23, 42, 0.97)), 
+                              url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Smooth tab animation */
+        .active-nav {
+            color: #facc15;
+            border-bottom: 2px solid #facc15;
+        }
+
+        /* Quiz option state styles */
+        .quiz-option {
+            transition: all 0.2s ease;
+        }
+        .quiz-option:hover {
+            transform: translateX(4px);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen antialiased flex flex-col justify-between">
+
+    <!-- HEADER Z СKLANYM EFEKTOM (GLASSMORPHISM) -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-header transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="#hero" class="flex items-center space-x-3 group">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-pitch-500 to-gold-400 flex items-center justify-center text-slate-950 text-xl font-black shadow-lg shadow-pitch-500/30 group-hover:scale-105 transition-transform">
+                        <i class="fa-solid font-soccer-ball fa-football"></i>
+                    </div>
+                    <span class="text-xl font-extrabold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-pitch-500">
+                        FOOTBALL<span class="text-gold-400">HUB</span>
+                    </span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-8 text-sm font-bold tracking-wide">
+                    <a href="#hero" class="nav-link text-slate-100 hover:text-gold-400 transition-colors py-2">Головна</a>
+                    <a href="#rules" class="nav-link text-slate-100 hover:text-gold-400 transition-colors py-2">Правила</a>
+                    <a href="#history" class="nav-link text-slate-100 hover:text-gold-400 transition-colors py-2">Історія</a>
+                    <a href="#quiz" class="nav-link text-slate-100 hover:text-gold-400 transition-colors py-2">Тест</a>
+                </nav>
+
+                <!-- Action Button -->
+                <div class="hidden md:block">
+                    <a href="#quiz" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-pitch-500 to-pitch-800 text-white font-semibold text-sm shadow-lg hover:shadow-pitch-500/25 hover:opacity-95 transition-all">
+                        Пройти тест <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-btn" class="md:hidden text-slate-300 hover:text-white p-2 rounded-lg focus:outline-none">
+                    <i class="fa-solid fa-bars text-2xl" id="menu-icon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass-header border-t border-slate-800 px-4 pt-2 pb-6 space-y-3">
+            <a href="#hero" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-semibold text-slate-100 hover:bg-slate-800 hover:text-gold-400">Головна</a>
+            <a href="#rules" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-semibold text-slate-100 hover:bg-slate-800 hover:text-gold-400">Правила</a>
+            <a href="#history" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-semibold text-slate-100 hover:bg-slate-800 hover:text-gold-400">Історія</a>
+            <a href="#quiz" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-semibold text-slate-100 hover:bg-slate-800 hover:text-gold-400">Тест</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow pt-20">
+
+        <!-- HERO SECTION -->
+        <section id="hero" class="stadium-bg min-h-[90vh] flex items-center justify-center relative overflow-hidden py-24 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto text-center z-10">
+                <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pitch-950/80 border border-pitch-500/40 text-pitch-300 text-xs sm:text-sm font-semibold mb-6 shadow-md">
+                    <i class="fa-solid fa-trophy text-gold-400"></i> Світ найпопулярнішої гри у світі
+                </span>
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight drop-shadow-md">
+                    Магія Футболy: <br>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-pitch-400 via-gold-400 to-yellow-200">
+                        Правила, Історія та Легенди
+                    </span>
+                </h1>
+                <p class="text-lg sm:text-xl text-slate-200 mb-10 max-w-2xl mx-auto font-normal leading-relaxed drop-shadow">
+                    Дізнайтеся все про витоки королівського спорту, опануйте кожне правило та перевірте свої знання у нашому інтерактивному квізі!
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="#rules" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-pitch-500 hover:bg-pitch-600 text-slate-950 font-bold text-base transition-all transform hover:-translate-y-0.5 shadow-xl shadow-pitch-500/20">
+                        Вивчити правила <i class="fa-solid fa-book-open ml-2"></i>
+                    </a>
+                    <a href="#history" class="w-full sm:w-auto px-8 py-4 rounded-xl glass-card hover:bg-slate-800/80 text-white font-semibold text-base transition-all transform hover:-translate-y-0.5">
+                        Історія гри <i class="fa-solid fa-timeline ml-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Animated decorative elements -->
+            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 text-slate-300 animate-bounce">
+                <a href="#rules" class="text-sm flex flex-col items-center gap-1 hover:text-white transition-colors">
+                    <span>Гортати вниз</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- RULES SECTION -->
+        <section id="rules" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white mb-4">
+                    Основні <span class="text-pitch-500">Правила Гри</span>
+                </h2>
+                <div class="w-20 h-1 bg-gold-400 mx-auto rounded-full mb-4"></div>
+                <p class="text-slate-300 max-w-2xl mx-auto font-medium">
+                    Футбол регулюється 17 офіційними законами гри, затвердженими IFAB. Ось ключові аспекти, які потрібно знати кожному.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="glass-card rounded-2xl p-6 hover:border-pitch-500/60 transition-all duration-300 group">
+                    <div class="w-14 h-14 rounded-xl bg-pitch-900/80 border border-pitch-500/40 flex items-center justify-center text-pitch-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Команди та Склад</h3>
+                    <p class="text-slate-200 text-sm leading-relaxed">
+                        У матчі беруть участь дві команди, кожна з яких складається максимум з 11 гравців (включно з воротарем). Мінімальна кількість гравців на полі для продовження гри — 7 осіб.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-card rounded-2xl p-6 hover:border-pitch-500/60 transition-all duration-300 group">
+                    <div class="w-14 h-14 rounded-xl bg-pitch-900/80 border border-pitch-500/40 flex items-center justify-center text-pitch-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-stopwatch"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Тривалість Матчу</h3>
+                    <p class="text-slate-200 text-sm leading-relaxed">
+                        Стандартний матч триває 90 хвилин і ділиться на два тайми по 45 хвилин із 15-хвилинною перервою. Арбітр може додавати компенсаційний час наприкінці кожного тайму.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-card rounded-2xl p-6 hover:border-pitch-500/60 transition-all duration-300 group">
+                    <div class="w-14 h-14 rounded-xl bg-pitch-900/80 border border-pitch-500/40 flex items-center justify-center text-pitch-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-ban"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Офсайд (Поза грою)</h3>
+                    <p class="text-slate-200 text-sm leading-relaxed">
+                        Гравець перебуває в офсайді, якщо в момент передачі м'яча партнером він знаходиться ближче до лінії воріт суперника, ніж м'яч і передостанній гравець суперника.
+                    </p>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="glass-card rounded-2xl p-6 hover:border-pitch-500/60 transition-all duration-300 group">
+                    <div class="w-14 h-14 rounded-xl bg-pitch-900/80 border border-pitch-500/40 flex items-center justify-center text-pitch-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-hand"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Фоли та Порушення</h3>
+                    <p class="text-slate-200 text-sm leading-relaxed">
+                        Польовим гравцям заборонено торкатися м'яча руками (від плеча до кисті). Навмисна грубість, підніжки та неспортивна поведінка караються штрафними ударами або картками.
+                    </p>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="glass-card rounded-2xl p-6 hover:border-pitch-500/60 transition-all duration-300 group">
+                    <div class="w-14 h-14 rounded-xl bg-pitch-900/80 border border-pitch-500/40 flex items-center justify-center text-pitch-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-rectangle-ad"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Жовті та Червоні Картки</h3>
+                    <p class="text-slate-200 text-sm leading-relaxed">
+                        Жовта картка слугує попередженням за грубе порушення. Дві жовті картки або пряма червона картка означають вилучення гравця з поля без права заміни.
+                    </p>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="glass-card rounded-2xl p-6 hover:border-pitch-500/60 transition-all duration-300 group">
+                    <div class="w-14 h-14 rounded-xl bg-pitch-900/80 border border-pitch-500/40 flex items-center justify-center text-pitch-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Пенальті (11-метровий)</h3>
+                    <p class="text-slate-200 text-sm leading-relaxed">
+                        Призначається, якщо гравець припускається фолу у власному штрафному майданчику. Удар виконується з 11-метрової позначки один на один з воротарем.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- HISTORY SECTION -->
+        <section id="history" class="py-24 bg-slate-900/50 relative border-y border-slate-800/80">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white mb-4">
+                        Еволюція <span class="text-gold-400">Футболу</span>
+                    </h2>
+                    <div class="w-20 h-1 bg-pitch-500 mx-auto rounded-full mb-4"></div>
+                    <p class="text-slate-300 max-w-2xl mx-auto font-medium">
+                        Від стародавніх ігор з м'ячем до наймасштабнішого спортивного видовища на планеті.
+                    </p>
+                </div>
+
+                <!-- Timeline -->
+                <div class="relative max-w-4xl mx-auto">
+                    <!-- Vertical Line -->
+                    <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-pitch-500 via-gold-400 to-pitch-800 hidden md:block"></div>
+
+                    <div class="space-y-12">
+                        <!-- Timeline Item 1 -->
+                        <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                            <div class="w-full md:w-5/12 mb-6 md:mb-0 md:text-right pr-0 md:pr-8">
+                                <div class="glass-card p-6 rounded-2xl hover:border-gold-400/50 transition-all">
+                                    <span class="text-gold-400 font-extrabold text-lg block mb-1">200 р. до н.е.</span>
+                                    <h3 class="text-xl font-bold text-white mb-2">Витоки: Цуцзюй та Епіскірос</h3>
+                                    <p class="text-slate-200 text-sm">
+                                        Найдавніша документально підтверджена гра з м'ячем — китайська "Цуцзюй" (штовхати м'яч ногою). Також подібні ігри існували в Стародавній Греції та Римі.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-gold-400 text-slate-950 flex items-center justify-center font-bold shadow-lg z-10 mb-4 md:mb-0">
+                                1
+                            </div>
+                            <div class="w-full md:w-5/12 pl-0 md:pl-8"></div>
+                        </div>
+
+                        <!-- Timeline Item 2 -->
+                        <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                            <div class="w-full md:w-5/12 pr-0 md:pr-8"></div>
+                            <div class="w-10 h-10 rounded-full bg-pitch-500 text-slate-950 flex items-center justify-center font-bold shadow-lg z-10 mb-4 md:mb-0">
+                                2
+                            </div>
+                            <div class="w-full md:w-5/12 mb-6 md:mb-0 pl-0 md:pl-8">
+                                <div class="glass-card p-6 rounded-2xl hover:border-pitch-500/50 transition-all">
+                                    <span class="text-pitch-400 font-extrabold text-lg block mb-1">1863 Рік</span>
+                                    <h3 class="text-xl font-bold text-white mb-2">Народження Сучасного Футболу</h3>
+                                    <p class="text-slate-200 text-sm">
+                                        У Лондоні було засновано Футбольну асоціацію Англії (FA) та сформульовано перші уніфіковані правила, які остаточно відокремили футбол від регбі.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timeline Item 3 -->
+                        <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                            <div class="w-full md:w-5/12 mb-6 md:mb-0 md:text-right pr-0 md:pr-8">
+                                <div class="glass-card p-6 rounded-2xl hover:border-gold-400/50 transition-all">
+                                    <span class="text-gold-400 font-extrabold text-lg block mb-1">1904 Рік</span>
+                                    <h3 class="text-xl font-bold text-white mb-2">Заснування ФІФА</h3>
+                                    <p class="text-slate-200 text-sm">
+                                        У Парижі представники 7 європейських країн заснували Міжнародну федерацію футболу (ФІФА) для управління міжнародними змаганнями.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-gold-400 text-slate-950 flex items-center justify-center font-bold shadow-lg z-10 mb-4 md:mb-0">
+                                3
+                            </div>
+                            <div class="w-full md:w-5/12 pl-0 md:pl-8"></div>
+                        </div>
+
+                        <!-- Timeline Item 4 -->
+                        <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                            <div class="w-full md:w-5/12 pr-0 md:pr-8"></div>
+                            <div class="w-10 h-10 rounded-full bg-pitch-500 text-slate-950 flex items-center justify-center font-bold shadow-lg z-10 mb-4 md:mb-0">
+                                4
+                            </div>
+                            <div class="w-full md:w-5/12 mb-6 md:mb-0 pl-0 md:pl-8">
+                                <div class="glass-card p-6 rounded-2xl hover:border-pitch-500/50 transition-all">
+                                    <span class="text-pitch-400 font-extrabold text-lg block mb-1">1930 Рік</span>
+                                    <h3 class="text-xl font-bold text-white mb-2">Перший Чемпіонат Світу</h3>
+                                    <p class="text-slate-200 text-sm">
+                                        В Уругваї відбувся перший в історії Мундіаль. Господарі турніру здобули титул перших чемпіонів світу, перемігши у фіналі Аргентину.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timeline Item 5 -->
+                        <div class="relative flex flex-col md:flex-row items-center justify-between group">
+                            <div class="w-full md:w-5/12 mb-6 md:mb-0 md:text-right pr-0 md:pr-8">
+                                <div class="glass-card p-6 rounded-2xl hover:border-gold-400/50 transition-all">
+                                    <span class="text-gold-400 font-extrabold text-lg block mb-1">Сучасність</span>
+                                    <h3 class="text-xl font-bold text-white mb-2">Ера Технологій та VAR</h3>
+                                    <p class="text-slate-200 text-sm">
+                                        Сьогодні футбол — це багатомільярдна індустрія з використанням систем автоматичного визначення голів, VAR (відеоасистент арбітра) та збирає мільярди глядачів.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-gold-400 text-slate-950 flex items-center justify-center font-bold shadow-lg z-10 mb-4 md:mb-0">
+                                5
+                            </div>
+                            <div class="w-full md:w-5/12 pl-0 md:pl-8"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUIZ SECTION -->
+        <section id="quiz" class="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white mb-4">
+                    Футбольна <span class="text-pitch-500">Вікторина</span>
+                </h2>
+                <div class="w-20 h-1 bg-gold-400 mx-auto rounded-full mb-4"></div>
+                <p class="text-slate-300 font-medium">
+                    Перевірте свої знання правил та історії футболу! Дайте відповідь на 5 запитань.
+                </p>
+            </div>
+
+            <!-- Quiz Card -->
+            <div class="glass-card rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+                
+                <!-- Progress bar -->
+                <div class="w-full bg-slate-800 h-2 rounded-full mb-8 overflow-hidden">
+                    <div id="quiz-progress" class="bg-gradient-to-r from-pitch-500 to-gold-400 h-full w-0 transition-all duration-300"></div>
+                </div>
+
+                <!-- Quiz Container -->
+                <div id="quiz-box">
+                    <div class="flex justify-between items-center mb-6">
+                        <span id="question-number" class="text-xs sm:text-sm font-semibold tracking-wider text-pitch-400 uppercase">
+                            Питання 1 з 5
+                        </span>
+                        <span id="score-counter" class="text-xs sm:text-sm font-semibold text-gold-400">
+                            Бали: 0
+                        </span>
+                    </div>
+
+                    <!-- Question Text -->
+                    <h3 id="question-text" class="text-xl sm:text-2xl font-bold text-white mb-8 leading-snug">
+                        Завантаження питання...
+                    </h3>
+
+                    <!-- Options Container -->
+                    <div id="options-container" class="space-y-4 mb-8">
+                        <!-- Dynamic options will be injected here -->
+                    </div>
+
+                    <!-- Navigation controls -->
+                    <div class="flex justify-between items-center pt-4 border-t border-slate-800">
+                        <div id="feedback" class="text-sm font-medium"></div>
+                        <button id="next-btn" class="hidden px-6 py-3 rounded-xl bg-pitch-500 hover:bg-pitch-600 text-slate-950 font-bold transition-all ml-auto">
+                            Наступне питання <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results View (Hidden by default) -->
+                <div id="quiz-results" class="hidden text-center py-8">
+                    <div class="w-20 h-20 rounded-full bg-pitch-900/80 border-2 border-gold-400 flex items-center justify-center text-gold-400 text-3xl mx-auto mb-6">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <h3 class="text-3xl font-extrabold text-white mb-2">Вітаємо! Квіз завершено!</h3>
+                    <p class="text-slate-300 mb-6 font-medium">Ваш підсумковий результат:</p>
+                    
+                    <div class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pitch-400 to-gold-400 mb-8">
+                        <span id="final-score">0</span> / <span id="max-score">5</span>
+                    </div>
+
+                    <p id="result-message" class="text-slate-200 text-lg mb-8 max-w-md mx-auto font-medium">
+                        ...
+                    </p>
+
+                    <button id="restart-btn" class="px-8 py-4 rounded-xl bg-gradient-to-r from-pitch-500 to-pitch-700 text-white font-bold text-base hover:shadow-lg hover:shadow-pitch-500/20 transition-all">
+                        <i class="fa-solid fa-rotate-right ml-1 mr-2"></i> Спробувати ще раз
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 border-t border-slate-800/80 py-12 px-4 sm:px-6 lg:px-8 text-center sm:text-left">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-full bg-pitch-500 flex items-center justify-center text-slate-950 font-bold text-sm">
+                    <i class="fa-solid fa-football"></i>
+                </div>
+                <span class="text-lg font-extrabold tracking-wider text-white">
+                    FOOTBALL<span class="text-gold-400">HUB</span>
+                </span>
+            </div>
+            <p class="text-slate-500 text-sm">
+                &copy; 2026 FootballHub. Інтерактивний посібник із правил та історії футболу.
+            </p>
+            <div class="flex space-x-6 text-slate-400 text-lg">
+                <a href="#" class="hover:text-gold-400 transition-colors"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#" class="hover:text-gold-400 transition-colors"><i class="fa-brands fa-youtube"></i></a>
+                <a href="#" class="hover:text-gold-400 transition-colors"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Quiz Data
+        const quizQuestions = [
+            {
+                question: "Скільки гравців однієї команди мінімально має бути на полі, щоб матч міг продовжуватися?",
+                options: ["9 гравців", "7 гравців", "11 гравців", "8 гравців"],
+                correct: 1
+            },
+            {
+                question: "В якій країні у 1863 році були засновані перші уніфіковані офіційні правила футболу?",
+                options: ["Бразилія", "Італія", "Англія", "Німеччина"],
+                correct: 2
+            },
+            {
+                question: "Яке з цих порушень карається 11-метровим штрафним ударом (пенальті)?",
+                options: [
+                    "Фол польового гравця у власному штрафному майданчику",
+                    "Груба гра за межами штрафного майданчика",
+                    "Гра рукою воротаря у власному штрафному",
+                    "Офсайд на половині поля суперника"
+                ],
+                correct: 0
+            },
+            {
+                question: "В якій країні відбувся найперший Чемпіонат Світу з футболу у 1930 році?",
+                options: ["Франція", "Аргентина", "Уругвай", "Іспанія"],
+                correct: 2
+            },
+            {
+                question: "Що означає, коли гравець отримує червону картку під час матчу?",
+                options: [
+                    "Гравець вилучається з поля і може бути замінений",
+                    "Команда карається пенальті",
+                    "Гравець вилучається з поля без права заміни",
+                    "Гравець пропускає лише 10 хвилин гри"
+                ],
+                correct: 2
+            }
+        ];
+
+        // Quiz State
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        // DOM Elements
+        const questionNumberEl = document.getElementById('question-number');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainerEl = document.getElementById('options-container');
+        const scoreCounterEl = document.getElementById('score-counter');
+        const feedbackEl = document.getElementById('feedback');
+        const nextBtn = document.getElementById('next-btn');
+        const quizProgressEl = document.getElementById('quiz-progress');
+        const quizBoxEl = document.getElementById('quiz-box');
+        const quizResultsEl = document.getElementById('quiz-results');
+        const finalScoreEl = document.getElementById('final-score');
+        const maxScoreEl = document.getElementById('max-score');
+        const resultMessageEl = document.getElementById('result-message');
+        const restartBtn = document.getElementById('restart-btn');
+
+        // Initialize Quiz
+        function loadQuestion() {
+            answered = false;
+            nextBtn.classList.add('hidden');
+            feedbackEl.innerHTML = '';
+
+            const currentQ = quizQuestions[currentQuestionIndex];
+            questionNumberEl.textContent = `Питання ${currentQuestionIndex + 1} з ${quizQuestions.length}`;
+            questionTextEl.textContent = currentQ.question;
+            scoreCounterEl.textContent = `Бали: ${score}`;
+
+            // Update Progress Bar
+            const progressPercent = ((currentQuestionIndex) / quizQuestions.length) * 100;
+            quizProgressEl.style.width = `${progressPercent}%`;
+
+            // Load Options
+            optionsContainerEl.innerHTML = '';
+            currentQ.options.forEach((option, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option w-full p-4 rounded-xl text-left bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-slate-200 font-medium flex items-center justify-between transition-all';
+                btn.innerHTML = `
+                    <span>${option}</span>
+                    <div class="w-6 h-6 rounded-full border border-slate-500 flex items-center justify-center text-xs check-icon">
+                        ${String.fromCharCode(65 + idx)}
+                    </div>
+                `;
+                btn.addEventListener('click', () => selectOption(idx, btn));
+                optionsContainerEl.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedIdx, selectedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const currentQ = quizQuestions[currentQuestionIndex];
+            const allOptions = optionsContainerEl.children;
+
+            if (selectedIdx === currentQ.correct) {
+                score++;
+                scoreCounterEl.textContent = `Бали: ${score}`;
+                selectedBtn.classList.remove('bg-slate-800/80', 'border-slate-700');
+                selectedBtn.classList.add('bg-pitch-900/60', 'border-pitch-500', 'text-white');
+                selectedBtn.querySelector('.check-icon').innerHTML = '<i class="fa-solid fa-check text-pitch-400"></i>';
+                feedbackEl.innerHTML = '<span class="text-pitch-400 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Правильно!</span>';
+            } else {
+                selectedBtn.classList.remove('bg-slate-800/80', 'border-slate-700');
+                selectedBtn.classList.add('bg-red-950/60', 'border-red-500', 'text-white');
+                selectedBtn.querySelector('.check-icon').innerHTML = '<i class="fa-solid fa-xmark text-red-400"></i>';
+                
+                // Highlight correct option
+                const correctBtn = allOptions[currentQ.correct];
+                correctBtn.classList.remove('bg-slate-800/80', 'border-slate-700');
+                correctBtn.classList.add('bg-pitch-900/40', 'border-pitch-500/60');
+                feedbackEl.innerHTML = '<span class="text-red-400 font-bold"><i class="fa-solid fa-circle-xmark mr-1"></i> Неправильно!</span>';
+            }
+
+            // Disable all option buttons
+            Array.from(allOptions).forEach(btn => btn.disabled = true);
+
+            // Show next button
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+                nextBtn.classList.remove('hidden');
+            } else {
+                nextBtn.textContent = 'Завершити тест';
+                nextBtn.classList.remove('hidden');
+            }
+        }
+
+        nextBtn.addEventListener('click', () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizQuestions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        });
+
+        function showResults() {
+            quizProgressEl.style.width = '100%';
+            quizBoxEl.classList.add('hidden');
+            quizResultsEl.classList.remove('hidden');
+
+            finalScoreEl.textContent = score;
+            maxScoreEl.textContent = quizQuestions.length;
+
+            if (score === quizQuestions.length) {
+                resultMessageEl.textContent = "Феноменально! Ви справжній експерт із футболу!";
+            } else if (score >= 3) {
+                resultMessageEl.textContent = "Чудовий результат! Ви добре знаєте футбольні правила та історію!";
+            } else {
+                resultMessageEl.textContent = "Хороша спроба! Перечитайте правила на нашому сайті та спробуйте ще раз!";
+            }
+        }
+
+        restartBtn.addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            score = 0;
+            quizResultsEl.classList.add('hidden');
+            quizBoxEl.classList.remove('hidden');
+            nextBtn.textContent = 'Наступне питання';
+            loadQuestion();
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            if (mobileMenu.classList.contains('hidden')) {
+                menuIcon.className = 'fa-solid fa-bars text-2xl';
+            } else {
+                menuIcon.className = 'fa-solid fa-xmark text-2xl';
+            }
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                menuIcon.className = 'fa-solid fa-bars text-2xl';
+            });
+        });
+
+        // Active navigation link highlighting on scroll
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 120)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active-nav');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active-nav');
+                }
+            });
+        });
+
+        // Initialize on load
+        window.onload = function() {
+            loadQuestion();
+        };
+    </script>
+</body>
+</html>
